@@ -13,11 +13,85 @@ import {
   smoke2dRadius,
   teamColor,
   vectorToPoint,
+  frameToTime
 } from "."
 import { useMatch } from "../hooks/useMatch"
 
 export const FrameView: React.FC = () => {
   const frame = useMatch((state) => state.frame)
+
+  const {round, match} = useMatch()
+
+  let playersCT = Array()
+  let playersT = Array()
+
+  frame?.Players.forEach((player) => {
+    if(player.Team == 3) {
+      playersCT.push(player)
+    }
+    if(player.Team == 2) {
+      playersT.push(player)
+    }
+  })
+
+  playersCT.sort(function(a, b) {
+    return a.X - b.X
+  })
+
+  playersT.sort(function(a, b) {
+    return a.X - b.X
+  })
+  const url = " http://127.0.0.1:8000/predict"
+
+  const time = (match && round && frame && frameToTime(match, round, frame)) ?? 0
+
+  const predictData = {
+    CT_X1:playersCT[0].X,
+    CT_X2:playersCT[1].X,
+    CT_X3:playersCT[2].X,
+    CT_X4:playersCT[3].X,
+    CT_X5:playersCT[4].X,
+    CT_Y1:playersCT[0].Y,
+    CT_Y2:playersCT[1].Y,
+    CT_Y3:playersCT[2].Y,
+    CT_Y4:playersCT[3].Y,
+    CT_Y5:playersCT[4].Y,
+
+    T_X1:playersT[0].X,
+    T_X2:playersT[1].X,
+    T_X3:playersT[2].X,
+    T_X4:playersT[3].X,
+    T_X5:playersT[4].X,
+    T_Y1:playersT[0].Y,
+    T_Y2:playersT[1].Y,
+    T_Y3:playersT[2].Y,
+    T_Y4:playersT[3].Y,
+    T_Y5:playersT[4].Y,
+
+    AliveCT_1:(playersCT[0].Hp >= 1),
+    AliveCT_2:(playersCT[1].Hp >= 1),
+    AliveCT_3:(playersCT[2].Hp >= 1),
+    AliveCT_4:(playersCT[3].Hp >= 1),
+    AliveCT_5:(playersCT[4].Hp >= 1),
+
+    AliveT_1:(playersT[0].Hp >= 1),
+    AliveT_2:(playersT[1].Hp >= 1),
+    AliveT_3:(playersT[2].Hp >= 1),
+    AliveT_4:(playersT[3].Hp >= 1),
+    AliveT_5:(playersT[4].Hp >= 1),
+
+    TimeLeft:time
+  }
+
+  fetch(url, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(predictData),
+  }).then((response) =>  response.json().then((json => console.log(json))))
+
   return frame ? (
     <>
       <MolotovView frame={frame} />

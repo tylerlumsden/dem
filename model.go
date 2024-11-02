@@ -46,6 +46,7 @@ type Frame struct {
 	Players []Player
 	Nades   []Nade
 	Bomb    Bomb
+	Prediction float32
 }
 
 // Player ...

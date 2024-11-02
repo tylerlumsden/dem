@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"sort"
 	"time"
+	//"strconv"
+	//"fmt"
 
 	"github.com/golang/geo/r2"
 	"github.com/golang/geo/r3"
@@ -18,6 +20,7 @@ import (
 	"github.com/markus-wa/demoinfocs-golang/v4/pkg/demoinfocs/events"
 	"github.com/markus-wa/demoinfocs-golang/v4/pkg/demoinfocs/msgs2"
 	"github.com/oklog/ulid/v2"
+	//"github.com/go-resty/resty/v2"
 )
 
 const Version = "v0.0.0-alpha"
@@ -332,6 +335,7 @@ func Parse(reader io.Reader, path string, handler func(m Match)) (match Match, e
 		if parser.CurrentFrame()%fps != 0 {
 			return
 		}
+
 		frame := Frame{
 			Tick:    state.IngameTick(),
 			Frame:   parser.CurrentFrame(),
@@ -420,6 +424,7 @@ func Parse(reader io.Reader, path string, handler func(m Match)) (match Match, e
 				Flames:  e.Fires().Active().ConvexHull3D().Triangles(),
 			})
 		}
+
 		round.Frames = append(round.Frames, frame)
 	})
 

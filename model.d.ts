@@ -42,6 +42,7 @@ interface Frame {
   Players: Player[]
   Nades: Nade[] | null
   Bomb: Bomb
+  Prediction: number
 }
 
 interface Player extends Vector {

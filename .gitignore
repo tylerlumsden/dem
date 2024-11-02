@@ -11,3 +11,4 @@ __debug_bin
 *.dem
 *.rar
 gha-creds-*.json
+models/*
